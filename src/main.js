@@ -17,23 +17,33 @@ const loadMoreBTn = document.querySelector('.load-more-btn');
 loadMoreBTn.addEventListener('click', handleLoading);
 
 let page = 1;
-let keyWord;
-let oldKeyWord;
+let keyWord = '';
 
 async function handleSubmit(event) {
   event.preventDefault();
-  showLoader();
-  clearGallery();
-  hideLoadMoreButton();
 
   const inputValue = form.elements['search-text'].value.trim();
-  keyWord = inputValue;
-  if (oldKeyWord !== keyWord) {
-    page = 1;
-    oldKeyWord = keyWord;
+
+  if (!inputValue) {
+    iziToast.show({
+      message: 'Please enter a search query!',
+      position: 'topRight',
+      messageColor: '#fff',
+      backgroundColor: 'red',
+    });
+    return;
   }
+
+  keyWord = inputValue;
+  page = 1;
+
+  clearGallery();
+  hideLoadMoreButton();
+  showLoader();
+
   try {
-    const { hits, totalHits } = await getImagesByQuery(inputValue, page);
+    const { hits, totalHits } = await getImagesByQuery(keyWord, page);
+
     if (hits.length === 0) {
       iziToast.show({
         message:
@@ -42,14 +52,24 @@ async function handleSubmit(event) {
         messageColor: '#fff',
         backgroundColor: 'red',
       });
+      return;
+    }
+
+    createGallery(hits);
+
+    const totalPages = Math.ceil(totalHits / 15);
+
+    if (page >= totalPages) {
+      hideLoadMoreButton();
+
+      iziToast.show({
+        message: "We're sorry, but you've reached the end of search results.",
+        position: 'topRight',
+        messageColor: '#fff',
+        backgroundColor: 'red',
+      });
     } else {
-      createGallery(hits);
-      const totalPages = Math.ceil(totalHits / 15);
-      if (page >= totalPages) {
-        hideLoadMoreButton();
-      } else {
-        showLoadMoreButton();
-      }
+      showLoadMoreButton();
     }
   } catch (error) {
     iziToast.show({
@@ -58,26 +78,36 @@ async function handleSubmit(event) {
       messageColor: '#fff',
       backgroundColor: 'red',
     });
+  } finally {
+    hideLoader();
+    form.reset();
   }
-  hideLoader();
-  form.reset();
 }
 
 async function handleLoading() {
   page++;
-  const galleryItemHeight =
-    document.querySelector('.gallery-item').getBoundingClientRect().height * 2 +
-    48;
+
+  const galleryItem = document.querySelector('.gallery-item');
+
+  const galleryItemHeight = galleryItem
+    ? galleryItem.getBoundingClientRect().height * 2 + 48
+    : 0;
+
   showLoader();
   hideLoadMoreButton();
+
   try {
     const { hits, totalHits } = await getImagesByQuery(keyWord, page);
+
     createGallery(hits);
+
     window.scrollBy({
       top: galleryItemHeight,
       behavior: 'smooth',
     });
+
     const totalPages = Math.ceil(totalHits / 15);
+
     if (page >= totalPages) {
       iziToast.show({
         message: "We're sorry, but you've reached the end of search results.",
@@ -85,6 +115,7 @@ async function handleLoading() {
         messageColor: '#fff',
         backgroundColor: 'red',
       });
+
       hideLoadMoreButton();
     } else {
       showLoadMoreButton();
@@ -96,6 +127,7 @@ async function handleLoading() {
       messageColor: '#fff',
       backgroundColor: 'red',
     });
+  } finally {
+    hideLoader();
   }
-  hideLoader();
 }
