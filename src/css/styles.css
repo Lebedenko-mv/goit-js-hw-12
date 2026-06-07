@@ -1,18 +1,159 @@
-/**
-  |============================
-  | include css partials with
-  | default @import url()
-  |============================
-*/
-/* Common styles */
 @import url('./reset.css');
-@import url('./base.css');
-@import url('./container.css');
-@import url('./animations.css');
+* {
+  box-sizing: border-box;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
+}
 
-/* Sections style */
-@import url('./header.css');
-@import url('./vite-promo.css');
-@import url('./badges.css');
-@import url('./back-link.css');
-@import url('./footer.css');
+button {
+  display: block;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: 91px;
+  height: 40px;
+  background: #4e75ff;
+  color: #fff;
+  border: none;
+  transition: 0.5s;
+}
+
+button:hover {
+  background: #6c8cff;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 50px;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+}
+
+input {
+  border-radius: 4px;
+  width: 272px;
+  height: 40px;
+  color: #808080;
+  border: 1px solid #808080;
+  padding: 0 16px;
+  transition: 0.5s;
+  outline: none;
+}
+
+input:hover {
+  border: 1px solid black;
+}
+
+input:focus {
+  border: 1px solid #4e75ff;
+}
+
+.display-none {
+  display: none;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-item {
+  border: 1px solid #808080;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  position: relative;
+  display: block;
+}
+
+.gallery-image {
+  height: 240px !important;
+  width: 360px !important;
+}
+.overlay-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.in-list-container {
+  text-align: center;
+}
+
+.in-list-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.in-list-p {
+  font-size: 12px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+.loader::before,
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  animation: prixClipFix 2s linear infinite;
+}
+.loader::after {
+  transform: rotate3d(90, 90, 0, 180deg);
+  border-color: #ff3d00;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes prixClipFix {
+  0% {
+    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  }
+  50% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+  }
+  75%,
+  100% {
+    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+  }
+}
